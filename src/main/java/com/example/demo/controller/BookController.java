@@ -1,32 +1,27 @@
 package com.example.demo.controller;
 
-import com.example.demo.exceptions.BookNotFoundException;
 import com.example.demo.models.Book;
 import com.example.demo.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-@Controller
+@RestController
+@RequestMapping("/")
 public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/")
-    public String main(@RequestParam(required = false) String name,
+    @GetMapping
+    public List<Book> main(@RequestParam(required = false) String name,
                        @RequestParam(required = false)
                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                               LocalDate date,Model model) {
+                               LocalDate date) {
         List<Book> books;
 
         if (date != null && name != null && !name.isEmpty()) {
@@ -42,34 +37,27 @@ public class BookController {
             books = bookService.list();
         }
 
-        model.addAttribute("books", books);
-        model.addAttribute("date", date);
-        model.addAttribute("name", name);
-        return "main";
+        return books;
     }
 
     @GetMapping("/book/{id}")
-    public Book getBookDetails(@PathVariable("id") Long id, Model model) {
-        Book book = bookService.getBookById(id);
-        return book;
+    public Book getBookDetails(@PathVariable("id") Long id) {
+        return bookService.getBookById(id);
     }
 
-    @PostMapping("/add")
-    public String add(@RequestParam String name,
-                      @RequestParam
-                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                              LocalDate releaseDate,
-                      @RequestParam BigDecimal price) {
-       Book book = new Book(name, releaseDate, price);
-
-       bookService.saveBook(book);
-
-       return "redirect:/";
+    @PostMapping
+    public Book add(@RequestBody final Book book) {
+       return bookService.saveBook(book);
     }
 
-    @PostMapping("delete")
+    @PutMapping
+    public Book update(@RequestBody Book book) {
+        return bookService.updateBook(book);
+    }
+
+    @DeleteMapping
     public String delete(@RequestParam(value = "id") Long id, Model model) {
         bookService.deleteBook(id);
-        return "redirect:/";
+        return "book deleted successfully";
     }
 }

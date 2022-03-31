@@ -1,5 +1,8 @@
 package com.example.demo.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +11,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Book {
 
     @Id
@@ -20,44 +25,6 @@ public class Book {
     public Book(String name, LocalDate releaseDate, BigDecimal price) {
         this.name = name;
         this.releaseDate = releaseDate;
-        this.price = price;
-    }
-
-    public Book(String name) {
-        this.name = name;
-    }
-
-    public Book() {};
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

@@ -6,10 +6,8 @@ import com.example.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -22,26 +20,27 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public boolean saveBook(Book book) {
-        bookRepository.save(book);
-        return true;
+    public Book saveBook(Book book) {
+        return  bookRepository.save(book);
     }
 
 
-    public boolean deleteBook(Long bookId) {
+    public void deleteBook(Long bookId) {
+        if(bookRepository.findById(bookId).isEmpty()) {
+            throw new BookNotFoundException();
+        }
         bookRepository.deleteById(bookId);
-        return true;
     }
 
     public Book getBookById(Long bookId) {
         return bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
     }
 
-    public boolean updateBook(Long bookId) {
-        Book bookFromDb = getBookById(bookId);
-        bookFromDb.setName("Default");
-        bookRepository.save(bookFromDb);
-        return true;
+    public Book updateBook(Book book) {
+        if(bookRepository.findById(book.getId()).isEmpty()) {
+            throw new BookNotFoundException();
+        }
+        return bookRepository.save(book);
     }
 
     public List<Book> findByName(String name) {

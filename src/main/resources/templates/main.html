@@ -6,7 +6,7 @@
 </head>
 <body>
     <div>List of books</div>
-     <form method="get" action="/">
+     <form method="get">
         <input type="text" name="name" th:value="${name}">
         <input type="date" name="date" th:value="${date}">
         <button type="submit">Find</button>
@@ -17,7 +17,7 @@
         <span th:text="${book.releaseDate}"></span>
         <i th:text="${book.price}"> </i>
         <span style="display: inline;">
-            <form method="post" action="delete">
+            <form method="delete">
                 <button type="submit" name="id" th:value="${book.id}">Delete</button>
             </form>
         </span>
@@ -25,7 +25,7 @@
 
 
     <div>
-        <form method="post" action="add">
+        <form method="post">
             <input type="text" name="name" placeholder="Name"/>
             <input type="date" name="releaseDate" placeholder="Release Date"/>
             <input type='number' name="price" step='0.01' value='0.00' placeholder='0.00' />
