@@ -5,7 +5,6 @@ import com.example.demo.models.Book;
 import com.example.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,7 +22,6 @@ public class BookService {
     public Book saveBook(Book book) {
         return  bookRepository.save(book);
     }
-
 
     public void deleteBook(Long bookId) {
         if(bookRepository.findById(bookId).isEmpty()) {
