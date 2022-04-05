@@ -1,10 +1,9 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,4 +16,9 @@ public class Book {
     private String name;
     private LocalDate releaseDate;
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name="author_id")
+    @JsonIgnoreProperties("books")
+    private Author author;
 }

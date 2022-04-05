@@ -12,10 +12,18 @@ import java.time.LocalDateTime;
 public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<Object> handleExceptions(BookNotFoundException exception, WebRequest webRequest) {
+    public ResponseEntity<Object> bookNotFoundException(BookNotFoundException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
-        response.setMessage("Not found");
+        response.setMessage("Book Not found");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ResponseEntity<Object> authorNotFoundException(AuthorNotFoundException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage("Author Not found");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

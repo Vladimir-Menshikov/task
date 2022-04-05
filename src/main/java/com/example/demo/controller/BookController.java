@@ -54,7 +54,7 @@ public class BookController {
     }
 
     @DeleteMapping
-    public String delete(@RequestParam(value = "id") Long id, Model model) {
+    public String delete(@RequestParam(value = "id") Long id) {
         bookService.deleteBook(id);
         return "book deleted successfully";
     }
