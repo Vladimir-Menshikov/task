@@ -1,12 +1,17 @@
 package com.example.demo.services;
 
 import com.example.demo.exceptions.BookNotFoundException;
+import com.example.demo.exceptions.NoSuchAuthorException;
 import com.example.demo.models.Book;
+import com.example.demo.repositories.AuthorRepository;
 import com.example.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookService {
@@ -14,11 +19,37 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public List<Book> list() {
-        return bookRepository.findAll();
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    public List<Book> getAllDetail() {
+        return bookRepository.findAllDetail();
+    }
+
+    public List<Book> getAllSummary() {
+        return bookRepository.findAllSummary();
+    }
+
+    public Book getByIdSummary(Long bookId) {
+        Book book = bookRepository.findByIdSummary(bookId);
+        if (book == null) {
+            throw new BookNotFoundException();
+        }
+        return book;
+    }
+
+    public Book getByIdDetail(Long bookId) {
+        Book book = bookRepository.findByIdDetail(bookId);
+        if (book == null) {
+            throw new BookNotFoundException();
+        }
+        return book;
     }
 
     public Book saveBook(Book book) {
+        if(!authorRepository.existsById(book.getAuthor().getId())) {
+            throw new NoSuchAuthorException();
+        }
         return  bookRepository.save(book);
     }
 
@@ -27,10 +58,6 @@ public class BookService {
             throw new BookNotFoundException();
         }
         bookRepository.deleteById(bookId);
-    }
-
-    public Book getBookById(Long bookId) {
-        return bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
     }
 
     public Book updateBook(Book book) {

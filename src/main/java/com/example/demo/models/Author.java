@@ -2,8 +2,6 @@ package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,9 +14,23 @@ public class Author {
     private String firstName;
     private String lastName;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("author")
     private List<Book> books;
+
+    public Author() {
+    }
+
+    public Author(Long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Author(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     @Override
     public String toString() {

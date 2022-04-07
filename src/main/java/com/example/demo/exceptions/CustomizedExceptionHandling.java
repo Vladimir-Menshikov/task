@@ -26,4 +26,12 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
         response.setMessage("Author Not found");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NoSuchAuthorException.class)
+    public ResponseEntity<Object> noSuchAuthorException(NoSuchAuthorException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage("No such author");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

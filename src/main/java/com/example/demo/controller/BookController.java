@@ -4,10 +4,10 @@ import com.example.demo.models.Book;
 import com.example.demo.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -32,15 +32,25 @@ public class BookController {
             books = bookService.findByDate(date);
         }
         else {
-            books = bookService.list();
+            books = bookService.getAllDetail();
         }
 
         return books;
     }
 
+    @GetMapping("/book")
+    public List<Book> getAllSummary() {
+        return bookService.getAllSummary();
+    }
+
     @GetMapping("/book/{id}")
-    public Book getBookDetails(@PathVariable("id") Long id) {
-        return bookService.getBookById(id);
+    public Book getBook(@PathVariable("id") Long id) {
+        return bookService.getByIdSummary(id);
+    }
+
+    @GetMapping("/book/{id}/detail")
+    public Book getBookDetail(@PathVariable("id") Long id) {
+        return bookService.getByIdDetail(id);
     }
 
     @PostMapping
@@ -53,8 +63,8 @@ public class BookController {
         return bookService.updateBook(book);
     }
 
-    @DeleteMapping
-    public String delete(@RequestParam(value = "id") Long id) {
+    @DeleteMapping("/book/{id}")
+    public String delete(@PathVariable("id") Long id) {
         bookService.deleteBook(id);
         return "book deleted successfully";
     }
