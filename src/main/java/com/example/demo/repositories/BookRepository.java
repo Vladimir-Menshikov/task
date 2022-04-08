@@ -15,15 +15,17 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByReleaseDate(LocalDate date);
     List<Book> findByNameAndReleaseDate(String name, LocalDate date);
 
+    boolean existsByIsbn(String isbn);
+
     @Query("select b from Book b join fetch b.author")
     List<Book> findAllDetail();
 
     @Query("select b from Book b join fetch b.author where b.id = :id")
     Book findByIdDetail(@Param("id") Long id);
 
-    @Query("select new com.example.demo.models.Book(b.id, b.name, b.releaseDate, b.price) from Book b")
+    @Query("select new com.example.demo.models.Book(b.id, b.name, b.isbn, b.releaseDate, b.price) from Book b")
     List<Book> findAllSummary();
 
-    @Query("select new com.example.demo.models.Book(b.name, b.releaseDate, b.price) from Book b where b.id = :id")
+    @Query("select new com.example.demo.models.Book(b.name, b.isbn, b.releaseDate, b.price) from Book b where b.id = :id")
     Book findByIdSummary(@Param("id") Long id);
 }

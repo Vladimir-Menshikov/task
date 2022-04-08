@@ -1,17 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.exceptions.AuthorNotFoundException;
-import com.example.demo.exceptions.BookNotFoundException;
 import com.example.demo.models.Author;
-import com.example.demo.models.Book;
 import com.example.demo.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AuthorService {
@@ -34,7 +28,7 @@ public class AuthorService {
     public Author getByIdSummary(Long authorId) {
         Author author = authorRepository.findByIdSummary(authorId);
         if (author == null) {
-            throw new BookNotFoundException();
+            throw new AuthorNotFoundException();
         }
         return author;
     }

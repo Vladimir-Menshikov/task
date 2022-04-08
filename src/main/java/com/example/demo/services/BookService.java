@@ -2,9 +2,11 @@ package com.example.demo.services;
 
 import com.example.demo.exceptions.BookNotFoundException;
 import com.example.demo.exceptions.NoSuchAuthorException;
+import com.example.demo.exceptions.NonUniqueIsbnException;
 import com.example.demo.models.Book;
 import com.example.demo.repositories.AuthorRepository;
 import com.example.demo.repositories.BookRepository;
+import org.hibernate.NonUniqueObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -47,9 +49,7 @@ public class BookService {
     }
 
     public Book saveBook(Book book) {
-        if(!authorRepository.existsById(book.getAuthor().getId())) {
-            throw new NoSuchAuthorException();
-        }
+        validateBook(book);
         return  bookRepository.save(book);
     }
 
@@ -64,6 +64,7 @@ public class BookService {
         if(bookRepository.findById(book.getId()).isEmpty()) {
             throw new BookNotFoundException();
         }
+        validateBook(book);
         return bookRepository.save(book);
     }
 
@@ -97,5 +98,14 @@ public class BookService {
             books = bookRepository.findAll();
         }
         return books;
+    }
+
+    private void validateBook(Book book) {
+        if(bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new NonUniqueIsbnException();
+        }
+        if(!authorRepository.existsById(book.getAuthor().getId())) {
+            throw new NoSuchAuthorException();
+        }
     }
 }

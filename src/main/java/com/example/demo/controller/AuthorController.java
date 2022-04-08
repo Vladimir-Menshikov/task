@@ -5,6 +5,7 @@ import com.example.demo.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +26,13 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}/detail")
-    public Author getByIdDetail(@PathVariable("id") Long id) {
-        return authorService.getByIdDetail(id);
+    public Author getByIdDetail(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        return authorService.getByIdDetail(Long.valueOf(id));
     }
 
     @GetMapping("/{id}")
-    public Author getByIdSummary(@PathVariable("id") Long id) {
-        return authorService.getByIdSummary(id);
+    public Author getByIdSummary(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        return authorService.getByIdSummary(Long.valueOf(id));
     }
 
     @PostMapping
@@ -40,8 +41,8 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        authorService.deleteById(id);
+    public String delete(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        authorService.deleteById(Long.valueOf(id));
         return "author deleted successfully";
     }
     @PutMapping

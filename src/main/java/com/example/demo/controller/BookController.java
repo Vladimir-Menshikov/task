@@ -4,13 +4,17 @@ import com.example.demo.models.Book;
 import com.example.demo.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/")
+@Validated
 public class BookController {
     @Autowired
     private BookService bookService;
@@ -44,13 +48,13 @@ public class BookController {
     }
 
     @GetMapping("/book/{id}")
-    public Book getBook(@PathVariable("id") Long id) {
-        return bookService.getByIdSummary(id);
+    public Book getBook(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        return bookService.getByIdSummary(Long.valueOf(id));
     }
 
     @GetMapping("/book/{id}/detail")
-    public Book getBookDetail(@PathVariable("id") Long id) {
-        return bookService.getByIdDetail(id);
+    public Book getBookDetail(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        return bookService.getByIdDetail(Long.valueOf(id));
     }
 
     @PostMapping
@@ -64,8 +68,8 @@ public class BookController {
     }
 
     @DeleteMapping("/book/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        bookService.deleteBook(id);
+    public String delete(@PathVariable("id") @Pattern(regexp = "^[0-9]+$") String id) {
+        bookService.deleteBook(Long.valueOf(id));
         return "book deleted successfully";
     }
 }
