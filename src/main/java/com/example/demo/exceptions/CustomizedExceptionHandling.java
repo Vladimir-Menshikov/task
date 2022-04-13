@@ -2,11 +2,14 @@ package com.example.demo.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.naming.AuthenticationException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
@@ -16,7 +19,7 @@ import java.util.Set;
 public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<Object> bookNotFoundException(BookNotFoundException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> bookNotFoundException(BookNotFoundException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
         response.setMessage("Book Not found");
@@ -24,15 +27,31 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(AuthorNotFoundException.class)
-    public ResponseEntity<Object> authorNotFoundException(AuthorNotFoundException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> authorNotFoundException(AuthorNotFoundException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
         response.setMessage("Author Not found");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> userNotFoundException(UserNotFoundException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage("User Not found");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> usernameNotFoundException(UsernameNotFoundException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage(exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NoSuchAuthorException.class)
-    public ResponseEntity<Object> noSuchAuthorException(NoSuchAuthorException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> noSuchAuthorException(NoSuchAuthorException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
         response.setMessage("No such author");
@@ -40,7 +59,7 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> constraintViolationException(ConstraintViolationException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> constraintViolationException(ConstraintViolationException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
 
         response.setDateTime(LocalDateTime.now());
@@ -49,7 +68,7 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<Object> numberFormatException(NumberFormatException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> numberFormatException(NumberFormatException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
         response.setMessage("Wrong id");
@@ -57,10 +76,18 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(NonUniqueIsbnException.class)
-    public ResponseEntity<Object> numberFormatException(NonUniqueIsbnException exception, WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponse> nonUniqueIsbnException(NonUniqueIsbnException exception, WebRequest webRequest) {
         ExceptionResponse response = new ExceptionResponse();
         response.setDateTime(LocalDateTime.now());
         response.setMessage("ISBN must be unique");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> authenticationException(AuthenticationException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
