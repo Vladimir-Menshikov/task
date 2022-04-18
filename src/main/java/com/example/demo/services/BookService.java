@@ -100,12 +100,13 @@ public class BookService {
         return books;
     }
 
-    private void validateBook(Book book) {
+    private boolean validateBook(Book book) {
         if(bookRepository.existsByIsbn(book.getIsbn())) {
             throw new NonUniqueIsbnException();
         }
         if(!authorRepository.existsById(book.getAuthor().getId())) {
             throw new NoSuchAuthorException();
         }
+        return true;
     }
 }

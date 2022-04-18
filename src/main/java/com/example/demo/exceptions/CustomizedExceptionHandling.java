@@ -91,6 +91,22 @@ public class CustomizedExceptionHandling extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<ExceptionResponse> registrationException(RegistrationException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage(exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameTakenException.class)
+    public ResponseEntity<ExceptionResponse> usernameTaken(UsernameTakenException exception, WebRequest webRequest) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setDateTime(LocalDateTime.now());
+        response.setMessage("This username is already taken");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     private String violationMessage(ConstraintViolationException exception) {
         StringBuilder message = new StringBuilder();
         Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();

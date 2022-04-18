@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -19,6 +20,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ADMIN_ENDPOINT = "/admin/**";
     private static final String LOGIN_ENDPOINT = "/login";
+    private static final String LOGOUT_ENDPOINT = "/logout";
+    private static final String REGISTER_ENDPOINT = "/register";
+    private static final String ACCOUNT_ENDPOINT = "/account";
 
     @Bean
     @Override
@@ -35,10 +39,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers("/account").authenticated()
-                .antMatchers(HttpMethod.GET, ADMIN_ENDPOINT).hasAuthority("ADMIN")
+                .antMatchers(REGISTER_ENDPOINT).permitAll()
+                .antMatchers(ACCOUNT_ENDPOINT).authenticated()
+                .antMatchers(ADMIN_ENDPOINT).hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .logoutUrl(LOGOUT_ENDPOINT)
+                .permitAll()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }
